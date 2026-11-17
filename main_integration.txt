@@ -1,0 +1,21 @@
+以下三段加入既有 Core/Src/main.c，不要用此檔覆蓋 main.c。
+請刪除先前手動貼上的 encoder 測試變數、ReadDelta 函式、啟動與迴圈程式，避免重複定義或重複啟動。
+
+1. USER CODE BEGIN Includes 區域加入：
+
+#include "encoder_test.h"
+
+2. USER CODE BEGIN 2 區域加入：
+   此位置必須在 MX_TIM2_Init()、MX_TIM3_Init()、MX_TIM4_Init()、MX_TIM5_Init() 之後。
+
+if (EncoderTest_Init() != HAL_OK)
+{
+    Error_Handler();
+}
+
+3. 在既有 while (1) 的 USER CODE BEGIN 3 區域加入：
+
+EncoderTest_Update();
+
+只保留一個主迴圈；測試時停用其他馬達驅動與阻塞程式。
+本模組不啟動 TIM1 PWM，不會主動驅動馬達。
